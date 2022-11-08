@@ -1,12 +1,14 @@
 <?php
 
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ShoppingRequestController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('login', [LoginController::class, 'index'])->name('login');
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('users/{user}', [LoginController::class, 'show']);
+   Route::apiResource('shopping_request',ShoppingRequestController::class);
 });
 
-// Route::get('users/{user}', [LoginController::class, 'getUsers']);
+
+

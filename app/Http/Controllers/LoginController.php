@@ -15,19 +15,16 @@ class LoginController extends Controller
         $credentials = $request->only(['email', 'password']);
 
         if (!Auth::attempt($credentials)) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Login ou senha inválidos'
-            ], 401);
+            return $this->buildResponse([], 401, "E-mail ou senha inválidos!");
         }
 
         $user = Auth::user();
         $token = $user->createToken('token');
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Login realizado com sucesso',
-            'token' => $token->plainTextToken
-        ], 200);
+        return $this->buildResponse([
+            'token' => $token->plainTextToken,
+            'token_complete' =>  "Bearer {$token->plainTextToken}",
+            'data_user' => $user
+        ], 200, "Login realizado com sucesso");
     }
 }
