@@ -15,6 +15,9 @@ class CreateProvidersTable extends Migration
     {
         Schema::create('providers', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('collaborator_id')->constrained()->onDelete("cascade");
+            $table->string('name')->nullable(false);
+            $table->string('cnpj')->nullable(false);
             $table->timestamps();
         });
     }

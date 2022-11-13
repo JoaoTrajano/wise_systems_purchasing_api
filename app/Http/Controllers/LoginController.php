@@ -6,16 +6,20 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
     public function index(Request $request)
     {
         $credentials = $request->only(['email', 'password']);
+        $this->sanitize($credentials);
+
+        if (empty($credentials['email'] || empty($credentials['password']))) {
+            return $this->buildResponse([], 400, "Campos email e senha obrigatórios!");
+        }
 
         if (!Auth::attempt($credentials)) {
-            return $this->buildResponse([], 401, "E-mail ou senha inválidos!");
+            return $this->buildResponse([], 400, "E-mail ou senha inválidos!");
         }
 
         $user = Auth::user();
@@ -25,6 +29,15 @@ class LoginController extends Controller
             'token' => $token->plainTextToken,
             'token_complete' =>  "Bearer {$token->plainTextToken}",
             'data_user' => $user
-        ], 200, "Login realizado com sucesso");
+        ], 200, "Login realizado com sucesso!");
+    }
+
+    public function sanitize(array $credentials): array
+    {
+        foreach ($credentials as $index => $value) {
+            $credentials[$index] = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
+        }
+
+        return $credentials;
     }
 }
