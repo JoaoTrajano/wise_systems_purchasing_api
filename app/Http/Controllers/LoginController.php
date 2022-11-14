@@ -22,6 +22,8 @@ class LoginController extends Controller
             return $this->buildResponse([], 400, "E-mail ou senha inválidos!");
         }
 
+        //$2y$10$n8nClTd/R2grrFZnhDpjZuJTvtY/5UlLzJ6QfGFb1Pb9qFhyqKHGK
+
         $user = Auth::user();
         $token = $user->createToken('token');
 
